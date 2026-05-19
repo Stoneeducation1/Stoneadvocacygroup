@@ -415,7 +415,7 @@
       .hero-left { padding: 4rem 1.5rem 2rem; }
       .crisis-strip { grid-template-columns: 1fr; padding: 2rem 1.5rem; gap: 1.5rem; }
       section { padding: 4rem 1.5rem; }
-      .how-grid, .pricing-grid { grid-template-columns: 1fr; }
+      .how-grid, .pricing-grid { grid-template-columns: 1fr !important; }
       .pain-grid { grid-template-columns: 1fr; }
       .test-grid { grid-template-columns: 1fr; }
       .about { grid-template-columns: 1fr; gap: 3rem; }
@@ -562,21 +562,26 @@
   <span class="section-tag">Our Process</span>
   <h2 class="section-title">Simple steps. Real results.</h2>
   <p class="section-sub">We guide you from confusion and frustration to clarity and action — with expert support every step of the way.</p>
-  <div class="how-grid">
+  <div class="how-grid" style="grid-template-columns: repeat(4,1fr);">
     <div class="how-step">
       <span class="step-num">01</span>
       <h4>Free Discovery Call</h4>
-      <p>We listen to your story, review your situation, and tell you exactly where you stand and what your rights are — no charge, no pressure.</p>
+      <p>We listen to your story and tell you exactly where you stand and what your rights are — no charge, no pressure. Book directly on Calendly.</p>
     </div>
     <div class="how-step">
       <span class="step-num">02</span>
-      <h4>Strategy & Document Review</h4>
-      <p>We review school records, evaluations, IEPs, and correspondence to build a clear picture and develop a strategic advocacy plan tailored to your child.</p>
+      <h4>Choose Your Service</h4>
+      <p>We recommend the right support tier for your situation. Once you're ready, you'll receive a secure payment link to confirm your service.</p>
+    </div>
+    <div class="how-step" style="border-color: var(--sage); background: var(--warm-white);">
+      <span class="step-num" style="color: var(--sage);">03</span>
+      <h4>Complete Your Intake Form</h4>
+      <p>After payment is confirmed, we'll email you a private link to your secure client intake form — so we can prepare before our first working session.</p>
     </div>
     <div class="how-step">
-      <span class="step-num">03</span>
+      <span class="step-num">04</span>
       <h4>Advocacy in Action</h4>
-      <p>We attend meetings with you, draft letters to the school, coach you through negotiations, and escalate when necessary — always with your child's best outcome as the goal.</p>
+      <p>We review records, attend meetings with you, draft letters, and escalate when necessary — always with your child's best outcome as the goal.</p>
     </div>
   </div>
 </section>

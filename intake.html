@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Intake Form | Stone Advocacy Group</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f2;
+      --ink: #1a1208;
+      --rust: #c0472a;
+      --sage: #4a6741;
+      --sage-light: #7aa672;
+      --sand: #e8dcc8;
+      --sand-dark: #c9b99a;
+      --muted: #7a6e60;
+      --sage-bg: #f0f7ee;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); }
+
+    /* NAV */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--sand);
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--ink); text-decoration: none; }
+    .logo span { color: var(--rust); }
+    .nav-badge { background: var(--sage-bg); color: var(--sage); font-size: 0.8rem; font-weight: 500; padding: 0.35rem 1rem; border-radius: 2rem; border: 1px solid #c5dfc0; }
+
+    /* HERO STRIP */
+    .form-hero {
+      background: var(--sage); color: #fff;
+      padding: 3rem 3rem 2.5rem;
+      text-align: center;
+    }
+    .form-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 0.75rem; }
+    .form-hero p { font-size: 1rem; opacity: 0.85; max-width: 560px; margin: 0 auto; line-height: 1.7; }
+    .progress-bar { display: flex; align-items: center; justify-content: center; gap: 0; margin-top: 2rem; }
+    .prog-step { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .prog-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.6); transition: all 0.3s; }
+    .prog-dot.active { background: #fff; color: var(--sage); border-color: #fff; }
+    .prog-dot.done { background: rgba(255,255,255,0.3); color: #fff; border-color: rgba(255,255,255,0.6); }
+    .prog-label { font-size: 0.7rem; opacity: 0.7; white-space: nowrap; }
+    .prog-line { width: 48px; height: 2px; background: rgba(255,255,255,0.25); margin-bottom: 1.4rem; }
+
+    /* FORM WRAPPER */
+    .form-wrapper { max-width: 760px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+    /* SECTION */
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+    .section-heading {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700;
+      margin-bottom: 0.5rem; color: var(--ink);
+    }
+    .section-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+
+    /* FIELD GROUPS */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    .field-row.single { grid-template-columns: 1fr; }
+    .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+    .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .field-group label { font-size: 0.82rem; font-weight: 500; color: var(--ink); }
+    .field-group label .req { color: var(--rust); margin-left: 2px; }
+    .field-group input, .field-group select, .field-group textarea {
+      padding: 0.75rem 1rem; border: 1.5px solid var(--sand);
+      border-radius: 0.65rem; background: var(--warm-white); color: var(--ink);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      transition: border-color 0.2s; width: 100%;
+    }
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+      outline: none; border-color: var(--sage);
+    }
+    .field-group textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    /* CHECKBOXES */
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-bottom: 1.25rem; }
+    .check-label {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--warm-white); border: 1.5px solid var(--sand);
+      padding: 0.5rem 1rem; border-radius: 2rem; cursor: pointer;
+      font-size: 0.875rem; transition: all 0.15s; user-select: none;
+    }
+    .check-label:hover { border-color: var(--sage-light); }
+    .check-label input[type="checkbox"] { display: none; }
+    .check-label.checked { background: var(--sage-bg); border-color: var(--sage); color: var(--sage); font-weight: 500; }
+    .check-label .checkmark { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--sand-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .check-label.checked .checkmark { background: var(--sage); border-color: var(--sage); }
+    .check-label.checked .checkmark::after { content: '✓'; color: #fff; font-size: 10px; line-height: 1; }
+
+    /* RADIO CARDS */
+    .radio-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.25rem; }
+    .radio-card {
+      border: 1.5px solid var(--sand); border-radius: 1rem; padding: 1.25rem;
+      cursor: pointer; transition: all 0.2s; background: var(--warm-white);
+    }
+    .radio-card:hover { border-color: var(--sage-light); }
+    .radio-card.selected { border-color: var(--sage); background: var(--sage-bg); }
+    .radio-card input { display: none; }
+    .radio-card .card-tier { font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.4rem; }
+    .radio-card .card-price { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--ink); margin-bottom: 0.25rem; }
+    .radio-card.selected .card-price { color: var(--sage); }
+    .radio-card .card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* DIVIDER LABEL */
+    .field-label { font-size: 0.875rem; font-weight: 500; color: var(--ink); margin-bottom: 0.6rem; display: block; }
+    .field-label .req { color: var(--rust); }
+
+    /* INFO BOX */
+    .info-box { background: var(--sage-bg); border: 1px solid #c5dfc0; border-radius: 0.75rem; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--sage); line-height: 1.65; }
+    .info-box strong { color: #2d5c24; }
+
+    /* CONSENT */
+    .consent-item { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.75rem 0; border-bottom: 1px solid var(--sand); }
+    .consent-item:last-child { border-bottom: none; }
+    .consent-check { width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--sand-dark); flex-shrink: 0; margin-top: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .consent-check.checked { background: var(--sage); border-color: var(--sage); }
+    .consent-check.checked::after { content: '✓'; color: #fff; font-size: 11px; }
+    .consent-text { font-size: 0.875rem; color: var(--muted); line-height: 1.6; cursor: pointer; }
+
+    /* NAV BUTTONS */
+    .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--sand); }
+    .btn-back { background: none; border: 1.5px solid var(--sand); color: var(--muted); padding: 0.8rem 1.75rem; border-radius: 2rem; font-size: 0.95rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-back:hover { border-color: var(--sand-dark); color: var(--ink); }
+    .btn-next { background: var(--sage); color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 2rem; font-size: 0.95rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-next:hover { background: var(--sage-light); transform: translateY(-1px); }
+    .btn-submit { background: var(--rust); color: #fff; border: none; padding: 0.9rem 2.5rem; border-radius: 2rem; font-size: 1rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-submit:hover { background: #d9583a; transform: translateY(-1px); }
+    .step-counter { font-size: 0.82rem; color: var(--muted); }
+
+    /* SUCCESS */
+    .success-screen { display: none; text-align: center; padding: 4rem 2rem; }
+    .success-screen.show { display: block; }
+    .success-icon { width: 72px; height: 72px; background: var(--sage-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2rem; }
+    .success-screen h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem; }
+    .success-screen p { font-size: 1rem; color: var(--muted); max-width: 480px; margin: 0 auto 1rem; line-height: 1.7; }
+
+    /* ERROR */
+    .field-error { font-size: 0.78rem; color: var(--rust); margin-top: 0.25rem; display: none; }
+    .field-group.has-error input, .field-group.has-error select, .field-group.has-error textarea { border-color: var(--rust); }
+    .field-group.has-error .field-error { display: block; }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.25rem; }
+      .form-hero { padding: 2rem 1.25rem; }
+      .form-hero h1 { font-size: 1.6rem; }
+      .form-wrapper { padding: 2rem 1.25rem 4rem; }
+      .field-row, .radio-cards { grid-template-columns: 1fr; }
+      .prog-line { width: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Stone<span>Advocacy</span> Group</a>
+  <span class="nav-badge">🔒 Secure client form</span>
+</nav>
+
+<div class="form-hero">
+  <h1>Client Intake Form</h1>
+  <p>This form helps us understand your child's situation before we begin. Please complete all sections as thoroughly as possible — the more detail you share, the better prepared we'll be.</p>
+  <div class="progress-bar" id="progress-bar">
+    <div class="prog-step">
+      <div class="prog-dot active" id="dot-1">1</div>
+      <span class="prog-label">About you</span>
+    </div>
+    <div class="prog-line"></div>
+    <div class="prog-step">
+      <div class="prog-dot" id="dot-2">2</div>
+      <span class="prog-label">Your child</span>
+    </div>
+    <div class="prog-line"></div>
+    <div class="prog-step">
+      <div class="prog-dot" id="dot-3">3</div>
+      <span class="prog-label">The situation</span>
+    </div>
+    <div class="prog-line"></div>
+    <div class="prog-step">
+      <div class="prog-dot" id="dot-4">4</div>
+      <span class="prog-label">Goals</span>
+    </div>
+    <div class="prog-line"></div>
+    <div class="prog-step">
+      <div class="prog-dot" id="dot-5">5</div>
+      <span class="prog-label">Confirm</span>
+    </div>
+  </div>
+</div>
+
+<div class="form-wrapper">
+
+  <!-- SECTION 1: Parent Info -->
+  <div class="form-section active" id="section-1">
+    <h2 class="section-heading">About you</h2>
+    <p class="section-sub">Your contact information so we can reach you and send meeting confirmations.</p>
+    <div class="field-row">
+      <div class="field-group" id="fg-name">
+        <label>Full name <span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="Jane Smith" />
+        <span class="field-error">Please enter your full name</span>
+      </div>
+      <div class="field-group" id="fg-rel">
+        <label>Relationship to child <span class="req">*</span></label>
+        <select id="f-rel">
+          <option value="">Select…</option>
+          <option>Parent</option>
+          <option>Legal guardian</option>
+          <option>Foster parent</option>
+          <option>Other</option>
+        </select>
+        <span class="field-error">Please select your relationship</span>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group" id="fg-email">
+        <label>Email address <span class="req">*</span></label>
+        <input type="email" id="f-email" placeholder="jane@email.com" />
+        <span class="field-error">Please enter a valid email</span>
+      </div>
+      <div class="field-group" id="fg-phone">
+        <label>Phone number <span class="req">*</span></label>
+        <input type="tel" id="f-phone" placeholder="(401) 555-0123" />
+        <span class="field-error">Please enter your phone number</span>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>City / Town</label>
+        <input type="text" placeholder="Providence" />
+      </div>
+      <div class="field-group">
+        <label>State</label>
+        <select>
+          <option value="">Select…</option>
+          <option>Rhode Island</option>
+          <option>Massachusetts</option>
+          <option>Connecticut</option>
+          <option>New Hampshire</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <span class="field-label">Preferred contact method</span>
+    <div class="checkbox-group" id="contact-pref">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Email</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Phone call</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Text message</label>
+    </div>
+    <span class="field-label">Best time to reach you</span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Morning (8am–12pm)</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Afternoon (12pm–5pm)</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Evening (5pm–8pm)</label>
+    </div>
+    <div class="form-nav">
+      <span class="step-counter">Step 1 of 5</span>
+      <button class="btn-next" onclick="goTo(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Child Info -->
+  <div class="form-section" id="section-2">
+    <h2 class="section-heading">Your child</h2>
+    <p class="section-sub">Tell us about your child and their current school situation.</p>
+    <div class="field-row">
+      <div class="field-group" id="fg-child">
+        <label>Child's full name <span class="req">*</span></label>
+        <input type="text" id="f-child" placeholder="First and last name" />
+        <span class="field-error">Please enter your child's name</span>
+      </div>
+      <div class="field-group">
+        <label>Date of birth</label>
+        <input type="date" />
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group" id="fg-school">
+        <label>Current school <span class="req">*</span></label>
+        <input type="text" id="f-school" placeholder="School name" />
+        <span class="field-error">Please enter the school name</span>
+      </div>
+      <div class="field-group">
+        <label>School district <span class="req">*</span></label>
+        <input type="text" id="f-district" placeholder="District name" />
+        <span class="field-error">Please enter the school district</span>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Current grade / program</label>
+        <select>
+          <option value="">Select…</option>
+          <option>Early intervention (birth–3)</option>
+          <option>Preschool / Pre-K (3–5)</option>
+          <option>Kindergarten</option>
+          <option>1st grade</option>
+          <option>2nd grade</option>
+          <option>3rd grade</option>
+          <option>4th grade</option>
+          <option>5th grade or above</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Child's age</label>
+        <input type="number" min="1" max="21" placeholder="e.g. 6" />
+      </div>
+    </div>
+    <span class="field-label">Does your child currently have any of the following? <span class="req">*</span></span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>IEP (Individualized Education Program)</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>504 Plan</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Neither — seeking first evaluation</label>
+    </div>
+    <span class="field-label">Has your child been diagnosed with any learning differences or disabilities?</span>
+    <div class="field-row single">
+      <div class="field-group">
+        <textarea placeholder="e.g. ADHD, autism, speech delay, dyslexia, sensory processing disorder — or 'not yet diagnosed but suspected'" rows="3"></textarea>
+      </div>
+    </div>
+    <span class="field-label">Has your child received any outside evaluations (private psychologist, speech therapist, OT, etc.)?</span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Yes — I have copies</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Yes — I don't have copies</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>No outside evaluations yet</label>
+    </div>
+    <div class="form-nav">
+      <button class="btn-back" onclick="goTo(1)">← Back</button>
+      <span class="step-counter">Step 2 of 5</span>
+      <button class="btn-next" onclick="goTo(3)">Next →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3: The Situation -->
+  <div class="form-section" id="section-3">
+    <h2 class="section-heading">The situation</h2>
+    <p class="section-sub">Help us understand what's been happening with the school and what you've tried so far.</p>
+    <span class="field-label">What is your primary concern? (check all that apply) <span class="req">*</span></span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>School refuses to evaluate</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Evaluation was denied</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Evaluation delayed / no response</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>IEP goals feel inadequate</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Services being reduced or removed</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>School not following the IEP</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Placement concerns</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Need general guidance</label>
+    </div>
+    <div class="field-row single">
+      <div class="field-group" id="fg-story">
+        <label>Describe what's been happening — in your own words. <span class="req">*</span></label>
+        <textarea id="f-story" rows="5" placeholder="Tell us your child's story. What have you noticed? What has the school said? How long has this been going on?"></textarea>
+        <span class="field-error">Please share a brief description</span>
+      </div>
+    </div>
+    <span class="field-label">How long have you had these concerns?</span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Less than 6 months</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>6–12 months</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>1–2 years</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>More than 2 years</label>
+    </div>
+    <span class="field-label">What have you already tried? (check all that apply)</span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Verbal requests to the school</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Written request for evaluation</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Attended IEP or 504 meetings</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Contacted the principal</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Contacted the district</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Filed a complaint</label>
+    </div>
+    <span class="field-label">Do you have any of these documents? (check all that apply)</span>
+    <div class="checkbox-group">
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Current IEP</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Previous IEP(s)</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>School evaluations</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>Written school correspondence</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>504 Plan</label>
+      <label class="check-label"><input type="checkbox" /><span class="checkmark"></span>None yet</label>
+    </div>
+    <div class="form-nav">
+      <button class="btn-back" onclick="goTo(2)">← Back</button>
+      <span class="step-counter">Step 3 of 5</span>
+      <button class="btn-next" onclick="goTo(4)">Next →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Goals -->
+  <div class="form-section" id="section-4">
+    <h2 class="section-heading">Your goals</h2>
+    <p class="section-sub">Help us understand what success looks like for your family, and which service is the right fit.</p>
+    <div class="field-row single">
+      <div class="field-group" id="fg-goal">
+        <label>What outcome are you hoping for? What would success look like for your child? <span class="req">*</span></label>
+        <textarea id="f-goal" rows="4" placeholder="e.g. I want the school to complete an evaluation, I want better IEP goals, I want my child placed in a more supportive classroom…"></textarea>
+        <span class="field-error">Please describe your goal</span>
+      </div>
+    </div>
+    <div class="field-row single">
+      <div class="field-group">
+        <label>Is there a specific upcoming meeting or deadline we should know about?</label>
+        <input type="text" placeholder="e.g. IEP meeting on June 15, evaluation due by end of month" />
+      </div>
+    </div>
+    <span class="field-label">Which service tier have you signed up for? <span class="req">*</span></span>
+    <div class="radio-cards" id="service-cards">
+      <div class="radio-card" onclick="selectService(this, 'starter')">
+        <input type="radio" name="service" value="starter" />
+        <div class="card-tier">Starter</div>
+        <div class="card-price">$97</div>
+        <div class="card-desc">One-time strategy session + action plan</div>
+      </div>
+      <div class="radio-card selected" onclick="selectService(this, 'active')">
+        <input type="radio" name="service" value="active" checked />
+        <div class="card-tier">Active Advocate</div>
+        <div class="card-price">$397<span style="font-size:1rem;font-family:'DM Sans',sans-serif;font-weight:400">/mo</span></div>
+        <div class="card-desc">Ongoing IEP support, meeting attendance, documents</div>
+      </div>
+      <div class="radio-card" onclick="selectService(this, 'full')">
+        <input type="radio" name="service" value="full" />
+        <div class="card-tier">Full Representation</div>
+        <div class="card-price">$197<span style="font-size:1rem;font-family:'DM Sans',sans-serif;font-weight:400">/hr</span></div>
+        <div class="card-desc">Disputes, mediation, state complaints</div>
+      </div>
+    </div>
+    <div class="field-row single">
+      <div class="field-group">
+        <label>Anything else you'd like us to know before we begin?</label>
+        <textarea rows="3" placeholder="Any additional context, concerns, or questions…"></textarea>
+      </div>
+    </div>
+    <div class="form-nav">
+      <button class="btn-back" onclick="goTo(3)">← Back</button>
+      <span class="step-counter">Step 4 of 5</span>
+      <button class="btn-next" onclick="goTo(5)">Review →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Confirm -->
+  <div class="form-section" id="section-5">
+    <h2 class="section-heading">Almost done</h2>
+    <p class="section-sub">Please read and confirm the statements below before submitting your intake form.</p>
+
+    <div class="info-box">
+      <strong>What happens next:</strong> Once you submit this form, we'll review your information and reach out within one business day to schedule your first working session. Please have any school documents you mentioned ready to share by email.
+    </div>
+
+    <div id="consents">
+      <div class="consent-item">
+        <div class="consent-check" onclick="toggleConsent(this)"></div>
+        <span class="consent-text" onclick="toggleConsent(this.previousElementSibling)">I confirm that the information I've provided is accurate and complete to the best of my knowledge.</span>
+      </div>
+      <div class="consent-item">
+        <div class="consent-check" onclick="toggleConsent(this)"></div>
+        <span class="consent-text" onclick="toggleConsent(this.previousElementSibling)">I understand that Stone Advocacy Group provides education advocacy services only and does not provide legal advice or legal representation.</span>
+      </div>
+      <div class="consent-item">
+        <div class="consent-check" onclick="toggleConsent(this)"></div>
+        <span class="consent-text" onclick="toggleConsent(this.previousElementSibling)">I consent to Stone Advocacy Group retaining this information for the purpose of providing advocacy services and communicating with my child's school on my behalf.</span>
+      </div>
+      <div class="consent-item">
+        <div class="consent-check" onclick="toggleConsent(this)"></div>
+        <span class="consent-text" onclick="toggleConsent(this.previousElementSibling)">I understand that my information will be kept strictly confidential and will not be shared with third parties without my written consent.</span>
+      </div>
+    </div>
+
+    <div id="consent-error" style="display:none; color:var(--rust); font-size:0.82rem; margin-top:0.75rem;">Please confirm all statements before submitting.</div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="goTo(4)">← Back</button>
+      <span class="step-counter">Step 5 of 5</span>
+      <button class="btn-submit" onclick="submitForm()">Submit Intake Form →</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success">
+    <div class="success-icon">✓</div>
+    <h2>We've received your intake form!</h2>
+    <p>Thank you for taking the time to share your child's story. We'll review everything you've submitted and reach out within <strong>one business day</strong> to schedule your first working session.</p>
+    <p style="margin-top:0.5rem;">In the meantime, if you have school records, IEPs, or evaluations to share, please email them to <strong>hello@stoneadvocacygroup.com</strong></p>
+    <p style="margin-top:2rem; font-style:italic; color:var(--muted);">We are honored to advocate for your child.</p>
+  </div>
+
+</div>
+
+<script>
+  let currentSection = 1;
+  const totalSections = 5;
+
+  // Checkbox pill toggle
+  document.querySelectorAll('.check-label').forEach(label => {
+    label.addEventListener('click', () => {
+      const isChecked = label.classList.toggle('checked');
+      label.querySelector('input[type="checkbox"]').checked = isChecked;
+    });
+  });
+
+  function goTo(n) {
+    if (n > currentSection && !validate(currentSection)) return;
+    document.getElementById('section-' + currentSection).classList.remove('active');
+    currentSection = n;
+    document.getElementById('section-' + n).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    for (let i = 1; i <= totalSections; i++) {
+      const dot = document.getElementById('dot-' + i);
+      dot.classList.remove('active', 'done');
+      if (i < currentSection) dot.classList.add('done');
+      else if (i === currentSection) dot.classList.add('active');
+    }
+  }
+
+  function validate(section) {
+    let valid = true;
+    if (section === 1) {
+      valid = checkRequired('fg-name', 'f-name') & checkRequired('fg-rel', 'f-rel') &
+              checkEmail('fg-email', 'f-email') & checkRequired('fg-phone', 'f-phone');
+    }
+    if (section === 2) {
+      valid = checkRequired('fg-child', 'f-child') & checkRequired('fg-school', 'f-school');
+    }
+    if (section === 3) {
+      valid = checkRequired('fg-story', 'f-story');
+    }
+    if (section === 4) {
+      valid = checkRequired('fg-goal', 'f-goal');
+    }
+    return !!valid;
+  }
+
+  function checkRequired(groupId, fieldId) {
+    const group = document.getElementById(groupId);
+    const field = document.getElementById(fieldId);
+    if (!field || !field.value.trim()) {
+      group.classList.add('has-error');
+      return false;
+    }
+    group.classList.remove('has-error');
+    return true;
+  }
+
+  function checkEmail(groupId, fieldId) {
+    const group = document.getElementById(groupId);
+    const field = document.getElementById(fieldId);
+    if (!field || !field.value.includes('@')) {
+      group.classList.add('has-error');
+      return false;
+    }
+    group.classList.remove('has-error');
+    return true;
+  }
+
+  function selectService(card, val) {
+    document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    card.querySelector('input').checked = true;
+  }
+
+  function toggleConsent(el) {
+    el.classList.toggle('checked');
+  }
+
+  function submitForm() {
+    const checks = document.querySelectorAll('#consents .consent-check');
+    const allChecked = [...checks].every(c => c.classList.contains('checked'));
+    if (!allChecked) {
+      document.getElementById('consent-error').style.display = 'block';
+      return;
+    }
+    document.getElementById('section-5').classList.remove('active');
+    document.getElementById('success').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
